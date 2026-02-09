@@ -15,9 +15,9 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-ARG GO_VERSION=1.24.11
+ARG GO_VERSION=1.25.6
 ARG XX_VERSION=1.9.0
-ARG GOLANGCI_LINT_VERSION=v2.6.2
+ARG GOLANGCI_LINT_VERSION=v2.8.0
 ARG ADDLICENSE_VERSION=v1.0.0
 
 ARG BUILD_TAGS="e2e"
@@ -83,7 +83,7 @@ RUN --mount=type=bind,target=. \
     --mount=type=cache,target=/go/pkg/mod \
     --mount=type=bind,from=osxcross,src=/osxsdk,target=/xx-sdk \
     xx-go --wrap && \
-    if [ "$(xx-info os)" == "darwin" ]; then export CGO_ENABLED=1; fi && \
+    if [ "$(xx-info os)" == "darwin" ]; then export CGO_ENABLED=1; export BUILD_TAGS=fsnotify,$BUILD_TAGS; fi && \
     make build GO_BUILDTAGS="$BUILD_TAGS" DESTDIR=/out && \
     xx-verify --static /out/docker-compose
 
